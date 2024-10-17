@@ -4,7 +4,21 @@ on:
   workflow_dispatch:
 
 jobs:
-  Godot:
+  KillSocialServer:
+     name: Kill Social Server
+     runs-on: ubuntu-latest
+     steps:
+     - name: Executing killall -q gcgd-social-server
+       uses: appleboy/ssh-action@v1.1.0
+       with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          port: ${{ secrets.VPS_PORT }}
+          key: ${{ secrets.VPS_KEY }}
+          script: killall -q gcgd-social-server
+  BuildAndDeploy:
+    needs: KillSocialServer
+    name: Build & Deploy
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -35,3 +49,19 @@ jobs:
         with:
           name: gcgd-social-server
           path: ${{ github.workspace }}/${{ steps.build.outputs.build }}
+  StartSocialServer:
+     needs: [KillSocialServer, BuildAndDeploy]
+     name: Start Social Server
+     runs-on: ubuntu-latest
+     steps:
+     - name: Starting Server
+       uses: appleboy/ssh-action@v1.1.0
+       with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          port: ${{ secrets.VPS_PORT }}
+          key: ${{ secrets.VPS_KEY }}
+          script: |
+            cd ~/github/workspace/build
+            chmod +x gcgd-social-server
+            nohup ./gcgd-social-server > /dev/null 2>&1 &
