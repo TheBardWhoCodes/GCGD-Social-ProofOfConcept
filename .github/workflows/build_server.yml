@@ -21,15 +21,15 @@ jobs:
           preset: ${{ matrix.platform }}
           debugMode: "false"
           projectDir: gcgd-social-server
-      - name: Copy File to VPS
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USERNAME }}
-          port: ${{ secrets.VPS_PORT }}
-          key: ${{ secrets.VPS_KEY }}
-          source: "gcgd-social-server.zip"
-          target: /home/${{ secrets.VPS_USERNAME }}
+      # - name: Copy File to VPS
+      #   uses: appleboy/scp-action@v0.1.7
+      #   with:
+      #     host: ${{ secrets.VPS_HOST }}
+      #     username: ${{ secrets.VPS_USERNAME }}
+      #     port: ${{ secrets.VPS_PORT }}
+      #     key: ${{ secrets.VPS_KEY }}
+      #     source: "gcgd-social-server.zip"
+      #     target: /home/${{ secrets.VPS_USERNAME }}
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
