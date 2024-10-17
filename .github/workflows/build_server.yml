@@ -1,0 +1,28 @@
+name: Build Godot Project
+
+on:
+  workflow_dispatch:
+
+jobs:
+  Godot:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform: [linux]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          lfs: true
+      - name: Build
+        id: build
+        uses: manleydev/build-godot-action@f759ed7f8fcb5137cb70873ecf663aa8a1bd998b
+        with:
+          name: gcgd-social-server
+          preset: ${{ matrix.platform }}
+          debugMode: "false"
+          projectDir: gcgd-social-server
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Client - ${{ matrix.platform }}
+          path: ${{ github.workspace }}/${{ steps.build.outputs.build }}
