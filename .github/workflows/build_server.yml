@@ -1,14 +1,28 @@
-name: Build Godot Project
+name: Build & Deploy Server
 
 on:
   workflow_dispatch:
 
 jobs:
-  Godot:
+  KillSocialServer:
+     name: Kill Social Server
+     runs-on: ubuntu-latest
+     steps:
+     - name: Executing killall -q gcgd-social-server
+       uses: appleboy/ssh-action@v1.1.0
+       with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          port: ${{ secrets.VPS_PORT }}
+          key: ${{ secrets.VPS_KEY }}
+          script: killall -q gcgd-social-server
+  BuildAndDeploy:
+    needs: KillSocialServer
+    name: Build & Deploy
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        platform: [linux]
+        platform: [Linux]
     steps:
       - uses: actions/checkout@v2
         with:
@@ -21,8 +35,33 @@ jobs:
           preset: ${{ matrix.platform }}
           debugMode: "false"
           projectDir: gcgd-social-server
+      - name: Copy File to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          port: ${{ secrets.VPS_PORT }}
+          key: ${{ secrets.VPS_KEY }}
+          source: ${{ github.workspace }}/${{ steps.build.outputs.build }}/gcgd-social-server
+          target: /home/${{ secrets.VPS_USERNAME }}
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Client - ${{ matrix.platform }}
+          name: gcgd-social-server
           path: ${{ github.workspace }}/${{ steps.build.outputs.build }}
+  StartSocialServer:
+     needs: [KillSocialServer, BuildAndDeploy]
+     name: Start Social Server
+     runs-on: ubuntu-latest
+     steps:
+     - name: Starting Server
+       uses: appleboy/ssh-action@v1.1.0
+       with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          port: ${{ secrets.VPS_PORT }}
+          key: ${{ secrets.VPS_KEY }}
+          script: |
+            cd ~/github/workspace/build
+            chmod +x gcgd-social-server
+            nohup ./gcgd-social-server > /dev/null 2>&1 &
