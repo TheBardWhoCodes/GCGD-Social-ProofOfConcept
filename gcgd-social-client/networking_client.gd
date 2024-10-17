@@ -6,7 +6,7 @@ const DEV = true
 @onready var disconnect_btn = $Lobby/DisconnectBtn
 
 var multiplayer_peer = ENetMultiplayerPeer.new()
-var url : String = "your-prod.url"
+var url : String = "ec2-18-117-120-174.us-east-2.compute.amazonaws.com"
 const PORT = 9009
 
 var connected_peer_ids = []
