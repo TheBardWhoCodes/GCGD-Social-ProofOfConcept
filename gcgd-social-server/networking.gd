@@ -12,14 +12,10 @@ func _ready():
 	multiplayer_peer.peer_disconnected.connect(_on_peer_disconnected)
 	print("Server is up and running.")
 
-
 func _on_peer_connected(new_peer_id : int) -> void:
 	print("Player " + str(new_peer_id) + " is joining...")
-	# The connect signal fires before the client is added to the connected
-	# clients in multiplayer.get_peers(), so we wait for a moment.
 	await get_tree().create_timer(1).timeout
 	add_player(new_peer_id)
-
 
 func add_player(new_peer_id : int) -> void:
 	var position: Vector2 = Vector2(0, 0)
@@ -29,8 +25,6 @@ func add_player(new_peer_id : int) -> void:
 	rpc("sync_player_list", connected_peers)
 
 func _on_peer_disconnected(leaving_peer_id : int) -> void:
-	# The disconnect signal fires before the client is removed from the connected
-	# clients in multiplayer.get_peers(), so we wait for a moment.
 	await get_tree().create_timer(1).timeout 
 	remove_player(leaving_peer_id)
 
@@ -42,7 +36,7 @@ func remove_player(leaving_peer_id : int) -> void:
 
 @rpc
 func sync_player_list(_updated_connected_peer_ids):
-	pass # only implemented in client (but still has to exist here)
+	pass
 
 @rpc("any_peer")
 func _move_player(peer_id: int, direction: Vector2):

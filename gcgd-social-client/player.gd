@@ -14,7 +14,7 @@ func get_input():
 
 func set_peer_id(peer_id: int):
 	this_players_peer_id = peer_id
-	
+
 func sync_current_position():
 	networking_client.set_position(this_players_peer_id, position)
 

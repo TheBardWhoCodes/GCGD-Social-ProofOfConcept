@@ -1,8 +1,6 @@
 extends Node
 class_name NetworkingClient
 
-const DEV = false
-
 @onready var host_input = $Lobby/HostInput
 @onready var connect_btn = $Lobby/ConnectBtn
 @onready var disconnect_btn = $Lobby/DisconnectBtn
@@ -36,7 +34,6 @@ func _on_connect_btn_pressed() -> void:
 	multiplayer_peer.create_client(url, PORT)
 	multiplayer.multiplayer_peer = multiplayer_peer
 	update_connection_buttons()
-
 
 func _on_disconnect_btn_pressed():
 	var peer_id = multiplayer_peer.get_unique_id()
