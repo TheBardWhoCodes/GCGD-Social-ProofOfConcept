@@ -23,5 +23,10 @@ offset_bottom = 55.0
 size_flags_horizontal = 4
 text = "Disconnect"
 
+[node name="Main" type="Node2D" parent="."]
+
+[node name="StartingPoint" type="Marker2D" parent="Main"]
+position = Vector2(143, 99)
+
 [connection signal="pressed" from="Lobby/ConnectBtn" to="." method="_on_connect_btn_pressed"]
 [connection signal="pressed" from="Lobby/DisconnectBtn" to="." method="_on_disconnect_btn_pressed"]
