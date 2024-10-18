@@ -1,16 +1,11 @@
 extends Node
-
-const DEV = true
-
 var multiplayer_peer = ENetMultiplayerPeer.new()
-var url : String = "your-prod.url"
+var url : String = "127.0.0.1"
 const PORT = 9009
 
 var connected_peers : Dictionary = {}
 
 func _ready():
-	if DEV == true:
-		url = "127.0.0.1"
 	multiplayer_peer.create_server(PORT)
 	multiplayer.multiplayer_peer = multiplayer_peer
 	multiplayer_peer.peer_connected.connect(_on_peer_connected)

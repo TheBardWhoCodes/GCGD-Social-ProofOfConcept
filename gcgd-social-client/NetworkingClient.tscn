@@ -8,20 +8,28 @@ script = ExtResource("1_nl1lj")
 [node name="Lobby" type="Node2D" parent="."]
 
 [node name="ConnectBtn" type="Button" parent="Lobby"]
-offset_left = 37.0
-offset_top = 24.0
-offset_right = 109.0
-offset_bottom = 55.0
+offset_left = 227.0
+offset_top = 19.0
+offset_right = 299.0
+offset_bottom = 50.0
 size_flags_horizontal = 4
 text = "Connect"
 
 [node name="DisconnectBtn" type="Button" parent="Lobby"]
-offset_left = 125.0
-offset_top = 24.0
-offset_right = 219.0
-offset_bottom = 55.0
+offset_left = 41.0
+offset_top = 63.0
+offset_right = 135.0
+offset_bottom = 94.0
 size_flags_horizontal = 4
 text = "Disconnect"
+
+[node name="HostInput" type="LineEdit" parent="Lobby"]
+offset_left = 41.0
+offset_top = 18.0
+offset_right = 218.0
+offset_bottom = 49.0
+text = "127.0.0.1"
+placeholder_text = "Host"
 
 [node name="Main" type="Node2D" parent="."]
 

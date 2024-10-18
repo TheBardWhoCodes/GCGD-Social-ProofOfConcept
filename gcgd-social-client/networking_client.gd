@@ -1,15 +1,15 @@
 extends Node
 class_name NetworkingClient
 
-const DEV = true
+const DEV = false
 
+@onready var host_input = $Lobby/HostInput
 @onready var connect_btn = $Lobby/ConnectBtn
 @onready var disconnect_btn = $Lobby/DisconnectBtn
 @onready var main_node = $Main
 @onready var starting_point = $Main/StartingPoint
 
 var multiplayer_peer : ENetMultiplayerPeer = ENetMultiplayerPeer.new()
-var url : String = "ec2-18-117-120-174.us-east-2.compute.amazonaws.com"
 const PORT = 9009
 
 var connected_peers : Dictionary = {}
@@ -18,8 +18,6 @@ var my_player : Player;
 const player_factory = preload("res://Player.tscn")
 
 func _ready():
-	if DEV == true:
-		url = "127.0.0.1"
 	update_connection_buttons()
 	multiplayer.connected_to_server.connect(_on_connected_to_server)
 	multiplayer.server_disconnected.connect(_on_server_disconnected)
@@ -33,7 +31,8 @@ func add_player_to_scene(peer_id: int, position: Vector2):
 	connected_peers[peer_id] = player
 
 func _on_connect_btn_pressed() -> void:
-	print("Connecting ...")
+	var url = host_input.text
+	print("Connecting to "+ url +"...")
 	multiplayer_peer.create_client(url, PORT)
 	multiplayer.multiplayer_peer = multiplayer_peer
 	update_connection_buttons()
